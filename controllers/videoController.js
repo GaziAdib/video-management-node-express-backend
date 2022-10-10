@@ -47,7 +47,7 @@ const updateVideo = async (req, res) => {
 
     const {title, category, description, thumbnailUrl, videoUrl } = req.body
 
-    const video = await Video.findById(req.params.id);
+    const video = await Video.findById(req.params.videoId);
 
     if(video) {
         video.title = title
@@ -69,7 +69,7 @@ const updateVideo = async (req, res) => {
 
 // delete video by id
 const deleteVideoById = async (req, res) => {
-    const foundedVideo =  await Video.findById(req.params.id);
+    const foundedVideo =  await Video.findById(req.params.videoId);
 
     if(foundedVideo) {
 
