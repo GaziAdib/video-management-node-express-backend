@@ -10,12 +10,12 @@ const getVideos = async (req, res) => {
 
 // get video by id
 const getVideoById = async (req, res) => {
-    const video = await Video.findById(req.params.id);
+    const video = await Video.findById(req.params.videoId);
 
     if(video) {
         res.json(video)
     } else {
-        res.status(404)
+        res.status(404).json({ message: 'video with this id not found!'})
         throw new Error('Video Not Found')
     }
 }
