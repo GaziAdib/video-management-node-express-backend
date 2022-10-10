@@ -1,6 +1,5 @@
 import Video from "../models/VideoModel.js";
 
-
 // get all videos
 
 const getVideos = async (req, res) => {
@@ -66,13 +65,6 @@ const updateVideo = async (req, res) => {
         throw new Error('Video Not Found')
     }
        
-
-   
-
-   
-
-    res.status(201).json(createdVideo)
-
 }
 
 // delete video by id
