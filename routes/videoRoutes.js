@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById } from '../controllers/videoController.js';
+import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount } from '../controllers/videoController.js';
 const router = express.Router();
 
 
@@ -18,5 +18,7 @@ router.put('/:videoId', updateVideo)
 
 // delete video
 router.delete('/:videoId', deleteVideoById)
+
+router.patch('/:videoId', updateLikeCount)
 
 export default router;

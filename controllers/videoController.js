@@ -82,4 +82,30 @@ const deleteVideoById = async (req, res) => {
     }
     
 }
-export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById }
+
+// update like count
+const updateLikeCount = async (req, res) => {
+
+        const videoId = await Video.findById(req.params.videoId);
+
+        if(videoId) {
+            const updatedLikeCount = await Video.findByIdAndUpdate(videoId, { $set: {likeCount: 1} })
+            res.json({ updatedLikeCount, message: 'like Count Increased' })
+        } else {
+            res.status(404)
+            throw new Error('Not Found any video to like count')
+        }
+       
+
+    // if(foundedVideo) {
+
+    //  await Video.(foundedVideo)
+    //  res.json({ message: 'Video Deleted' })
+        
+    // } else {
+    //     res.status(404)
+    //     throw new Error('Video Not Found')
+    // }
+    
+}
+export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount }
