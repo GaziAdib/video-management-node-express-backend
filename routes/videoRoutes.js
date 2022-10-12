@@ -1,11 +1,14 @@
 import express from 'express';
 
-import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount } from '../controllers/videoController.js';
+import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle } from '../controllers/videoController.js';
 const router = express.Router();
 
 
 // video get all data
 router.get('/', getVideos)
+
+//search by title
+router.get('/:title', searchByTitle)
 
 // video single get one video by id
 router.get('/:videoId', getVideoById)
@@ -20,5 +23,7 @@ router.put('/:videoId', updateVideo)
 router.delete('/:videoId', deleteVideoById)
 
 router.patch('/:videoId', updateLikeCount)
+
+
 
 export default router;
