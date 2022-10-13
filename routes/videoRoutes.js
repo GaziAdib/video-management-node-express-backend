@@ -7,9 +7,6 @@ const router = express.Router();
 // video get all data
 router.get('/', getVideos)
 
-//search by title
-router.get('/:title', searchByTitle)
-
 // video single get one video by id
 router.get('/:videoId', getVideoById)
 
@@ -23,6 +20,10 @@ router.put('/:videoId', updateVideo)
 router.delete('/:videoId', deleteVideoById)
 
 router.patch('/:videoId', updateLikeCount)
+
+//search by title
+router.get('/search/:title', searchByTitle)
+
 
 
 

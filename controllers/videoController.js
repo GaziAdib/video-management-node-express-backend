@@ -26,8 +26,6 @@ const getVideoById = async (req, res) => {
 }
 
 
-
-
 // add video
 
 const createVideo = async (req, res) => {
