@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
     video_id: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         ref: 'Video'
     },
     author: {
@@ -13,7 +13,6 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-
 }, {
     timestamps: true,
 });

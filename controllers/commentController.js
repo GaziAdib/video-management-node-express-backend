@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Comment from "../models/CommentModel.js";
 
 // get all Comments
@@ -17,17 +18,17 @@ const getComments = async (req, res) => {
 
 const addComment = async (req, res) => {
 
-    const { content, author } = req.body
+   const { content, author } = req.body
 
+   if(mongoose.Types.ObjectId.isValid(req.params.id)){
     const createdComment = await Comment.create({
         author: author ? author : 'Adib',
         content: content,
         video_id: req.params.id
-
     })
-
     res.status(201).json(createdComment)
-
+   }
+    
 }
 
 
