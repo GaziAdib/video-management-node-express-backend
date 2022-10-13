@@ -4,8 +4,14 @@ import Wishlist from "../models/WishlistModel.js";
 // get all Wishlists
 
 const getWishlists = async (req, res) => {
-    const Wishlists = await Wishlist.find({});
-    res.json(Wishlists)
+    try {
+        const Wishlists = await Wishlist.find({});
+        res.json(Wishlists)
+    } catch (error) {
+        res.json({ message: error })
+       console.log('error fetching wishlists', error)
+    }
+    
 }
 
 // add Wish list
@@ -43,7 +49,6 @@ const deleteWishlistById = async (req, res) => {
             throw new Error('Wishlist Not Found')
         }
     }
-   
 }
 
 
