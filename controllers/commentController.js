@@ -9,26 +9,26 @@ const getComments = async (req, res) => {
         res.json(comments)
     } catch (error) {
         res.json({ message: error })
-       console.log('error fetching Comments', error)
+        console.log('error fetching Comments', error)
     }
-    
+
 }
 
-// add Wish list
+// add comment 
 
 const addComment = async (req, res) => {
 
-   const { content, author } = req.body
+    const { content, author } = req.body
 
-   if(mongoose.Types.ObjectId.isValid(req.params.id)){
-    const createdComment = await Comment.create({
-        author: author ? author : 'Adib',
-        content: content,
-        video_id: req.params.id
-    })
-    res.status(201).json(createdComment)
-   }
-    
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const createdComment = await Comment.create({
+            author: author ? author : 'Adib',
+            content: content,
+            video_id: req.params.id
+        })
+        res.status(201).json(createdComment)
+    }
+
 }
 
 
@@ -40,10 +40,10 @@ const addComment = async (req, res) => {
 //         const foundedComment =  await Comment.findById(req.params.id);
 
 //         if(foundedComment) {
-    
+
 //          await Comment.deleteOne(foundedComment)
 //          res.json({ message: 'Comment Deleted' })
-            
+
 //         } else {
 //             res.status(404)
 //             throw new Error('Comment Not Found')

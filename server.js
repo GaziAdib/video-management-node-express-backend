@@ -11,6 +11,7 @@ import db from './db/db.js';
 import videoRoutes from './routes/videoRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import commentRoutes from './routes/commentRoutes.js'
+import userRoutes from './routes/userRoutes.js';
 
 
 dotenv.config()
@@ -21,24 +22,21 @@ const app = express();
 
 db();
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use([cors(), express.json(), express.urlencoded({ extended: true })]);
-
-
 
 app.get('/hellow', (req, res) => {
     return res.json({ message: 'hellow' })
 });
 
+
+app.use('/api/users', userRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/videos/wishlists', wishlistRoutes);
-app.use('/api/videos', commentRoutes)
+app.use('/api/videos', commentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT,() => `server is running on port: ${PORT}`);
+app.listen(PORT, () => `server is running on port: ${PORT}`);
 
 
 
