@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import User from "../models/UserModel.js";
 import bcrypt from 'bcrypt';
 
@@ -10,20 +9,23 @@ const createNewUser = async (req, res) => {
 
     const { username, email, password } = req.body
 
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required.' });
+    if (!username || !password || !email) {
+        return res.status(400).json({ message: 'Username and password and email are required.' });
+    } else if (password.length < 4) {
+        return res.status(400).json({ message: 'Password must be at least 4 character long!' });
     }
     else {
 
         // check for duplicate usernames in the db
 
-        const existingUser = await User.find({ username: username });
-        console.log(existingUser)
 
-        if (existingUser.username === username) {
-            // return res.sendStatus(409);
-            return res.json({ message: 'User alreaaddy Exists in db' });
-        } else {
+        const existingUserEmail = await User.findOne({ email: email });
+
+        if (existingUserEmail) {
+            res.json({ message: 'Email already Exists in our database!  Try another email' });
+        }
+
+        else {
 
             try {
 
@@ -39,9 +41,10 @@ const createNewUser = async (req, res) => {
                     password: hashedPwd
                 }
 
+
                 const userAdded = await User.create(newUser)
 
-                res.status(201).json({ message: `New User ${userAdded} created!` })
+                res.status(201).json({ message: `New User ${userAdded.username} created!` })
 
 
             } catch (error) {
@@ -61,26 +64,33 @@ const createNewUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 
+
     const { email, password } = req.body
+
+    //const hashpwd = await bcrypt.hash(password, 10);
 
     if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required.' });
     }
 
-    const foundUser = await User.find({ email: email })
+    const foundUser = await User.findOne({ email: email });
 
-    if (!foundUser) return res.status(401).json({ message: 'Cannot find this user!' })
+    if (!foundUser) return res.status(401).json({ message: 'Cannot find this user!' });
 
-    const match = await bcrypt.compare(password, foundUser.password);
+    try {
+        const match = await bcrypt.compare(password, foundUser.password);
+        if (match) {
 
-    if (match) {
+            // create jWT
+            res.json({ message: `User with Email: ${email} logged in!` })
 
-        // create jWT
-        res.json({ message: `User with Email: ${email} logged in!` })
-
-    } else {
-        res.status(401).json({ message: 'User is not authorized' })
+        } else {
+            res.status(401).json({ message: 'User is not authorized' })
+        }
+    } catch (error) {
+        res.json({ message: error.message })
     }
+
 
 
 }
