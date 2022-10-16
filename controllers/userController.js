@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 
 const createNewUser = async (req, res) => {
 
-    const { username, email, password } = req.body
+    const { username, email, password, profileImage } = req.body
 
     if (!username || !password || !email) {
         return res.status(400).json({ message: 'Username and password and email are required.' });
@@ -17,8 +17,6 @@ const createNewUser = async (req, res) => {
     else {
 
         // check for duplicate usernames in the db
-
-
         const existingUserEmail = await User.findOne({ email: email });
 
         if (existingUserEmail) {
@@ -38,7 +36,8 @@ const createNewUser = async (req, res) => {
                 const newUser = {
                     username: username,
                     email: email,
-                    password: hashedPwd
+                    password: hashedPwd,
+                    profileImage: profileImage ? profileImage : ''
                 }
 
 
