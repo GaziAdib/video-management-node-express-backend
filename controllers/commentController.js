@@ -36,26 +36,26 @@ const addComment = async (req, res) => {
 
 
 //delete Comment by id
-// const deleteCommentById = async (req, res) => {
-//     if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-//         const foundedComment =  await Comment.findById(req.params.id);
+const deleteCommentById = async (req, res) => {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const foundedComment = await Comment.findById(req.params.id);
 
-//         if(foundedComment) {
+        if (foundedComment) {
 
-//          await Comment.deleteOne(foundedComment)
-//          res.json({ message: 'Comment Deleted' })
+            await Comment.deleteOne(foundedComment)
+            res.json({ message: 'Comment Deleted' })
 
-//         } else {
-//             res.status(404)
-//             throw new Error('Comment Not Found')
-//         }
-//     }
-// }
-
-
+        } else {
+            res.status(404)
+            throw new Error('Comment Not Found')
+        }
+    }
+}
 
 
 
 
 
-export { addComment, getComments }
+
+
+export { addComment, getComments, deleteCommentById }
