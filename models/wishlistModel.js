@@ -1,15 +1,19 @@
 import mongoose from 'mongoose';
 
 const wishlistSchema = new mongoose.Schema({
-    author: {
+    authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    authorName: {
         type: String,
-        required: false,
+        required: true
     },
     title: {
         type: String,
         required: true,
     },
-    category:{
+    category: {
         type: String,
         required: true,
     },

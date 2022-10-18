@@ -18,11 +18,12 @@ const getComments = async (req, res) => {
 
 const addComment = async (req, res) => {
 
-    const { content, author } = req.body
+    const { content, authorId, authorName } = req.body
 
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         const createdComment = await Comment.create({
-            author: author ? author : 'Adib',
+            authorId: authorId,
+            authorName: authorName,
             content: content,
             video_id: req.params.id
         })

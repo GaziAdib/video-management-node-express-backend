@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "../models/UserModel.js";
 import Video from "../models/VideoModel.js";
 
 // get all videos
@@ -30,10 +31,17 @@ const getVideoById = async (req, res) => {
 
 const createVideo = async (req, res) => {
 
-    const { title, category, description, thumbnailUrl, videoUrl } = req.body
+    const { title, authorId, category, description, thumbnailUrl, videoUrl } = req.body
+
+    // get author infos
+    //const authUser = User.find
+
+    //const author = await User.findOne({ username: 'Adib' })
+
+    //console.log(author);
 
     const createdVideo = await Video.create({
-        author: 'Adib',
+        authorId: authorId,
         title: title,
         category: category,
         description: description,

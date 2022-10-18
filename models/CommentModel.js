@@ -5,9 +5,14 @@ const commentSchema = new mongoose.Schema({
         type: String,
         ref: 'Video'
     },
-    author: {
+    authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+
+    },
+    authorName: {
         type: String,
-        required: false,
+        required: true,
     },
     content: {
         type: String,

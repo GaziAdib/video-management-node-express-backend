@@ -43,7 +43,7 @@ const createNewUser = async (req, res) => {
 
                 const userAdded = await User.create(newUser)
 
-                res.status(201).json({ message: `New User ${userAdded.username} created!` })
+                res.status(201).json({ message: `New User ${userAdded.username} created!`, user: userAdded })
 
 
             } catch (error) {
@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
         if (match) {
 
             // create jWT
-            res.json({ message: `User with Email: ${email} logged in!` })
+            res.json({ message: `User with Email: ${email} logged in!`, user: foundUser })
 
         } else {
             res.status(401).json({ message: 'User is not authorized' })

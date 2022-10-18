@@ -5,23 +5,24 @@ import Wishlist from "../models/WishlistModel.js";
 
 const getWishlists = async (req, res) => {
     try {
-        const Wishlists = await Wishlist.find({});
-        res.json(Wishlists)
+        const wishlists = await Wishlist.find({ authorId: req.params.id });
+        res.json(wishlists)
     } catch (error) {
         res.json({ message: error })
-       console.log('error fetching wishlists', error)
+        console.log('error fetching wishlists', error)
     }
-    
+
 }
 
 // add Wish list
 
 const createWishlist = async (req, res) => {
 
-    const { title, author, category, thumbnailUrl } = req.body
+    const { title, authorId, authorName, category, thumbnailUrl } = req.body
 
     const createdWishlist = await Wishlist.create({
-        author: author ? author : 'Adib',
+        authorId: authorId,
+        authorName: authorName,
         title: title,
         category: category,
         thumbnailUrl: thumbnailUrl
@@ -36,14 +37,14 @@ const createWishlist = async (req, res) => {
 
 //delete Wishlist by id
 const deleteWishlistById = async (req, res) => {
-    if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-        const foundedWishlist =  await Wishlist.findById(req.params.id);
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const foundedWishlist = await Wishlist.findById(req.params.id);
 
-        if(foundedWishlist) {
-    
-         await Wishlist.deleteOne(foundedWishlist)
-         res.json({ message: 'Wishlist Deleted' })
-            
+        if (foundedWishlist) {
+
+            await Wishlist.deleteOne(foundedWishlist)
+            res.json({ message: 'Wishlist Deleted' })
+
         } else {
             res.status(404)
             throw new Error('Wishlist Not Found')

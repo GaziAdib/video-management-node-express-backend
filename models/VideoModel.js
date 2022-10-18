@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
-    author: {
-        type: String,
-        required: true,
+    authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     title: {
         type: String,
         required: true,
     },
-    category:{
+    category: {
         type: String,
         required: true,
     },

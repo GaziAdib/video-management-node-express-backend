@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 // wish get all data
-router.get('/all', getWishlists)
+router.get('/:id/all', getWishlists)
 
 
 // delete wish
