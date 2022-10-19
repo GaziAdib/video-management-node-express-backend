@@ -13,7 +13,7 @@ const getVideos = async (req, res) => {
 const getVideoById = async (req, res) => {
 
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
-        const video = await Video.findById(req.params.videoId);
+        const video = await Video.findByIdAndUpdate(req.params.videoId, { $inc: { viewsCount: 1 } });
 
         if (video) {
             res.json(video)
