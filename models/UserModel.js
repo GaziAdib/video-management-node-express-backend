@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    token: { type: String },
     videos: [
         {
             type: mongoose.Schema.Types.ObjectId,

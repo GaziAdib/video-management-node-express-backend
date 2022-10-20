@@ -153,6 +153,56 @@ const searchByTitle = async (req, res) => {
 }
 
 
+// like
+const likesVideoByUser = async (req, res) => {
 
 
-export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle }
+    // const result = await Video.findById(req.params.videoId);
+    // return res.json(result);
+    console.log(req.body.authorId);
+    const { videoId } = req.params;
+    try {
+        const result = await Video.findOneAndUpdate({ _id: videoId }, {
+
+            $push: { likes: req.user._id },
+
+            //$addToSet: { liskes: req.body.authorId }
+        }, {
+            new: true
+        })
+
+        console.log(result);
+        return res.json(result);
+
+    } catch (error) {
+        console.log(error)
+        return res.json({ error: error });
+    }
+
+
+
+}
+
+
+// unlike
+const unlikeVideoByUser = async (req, res) => {
+    try {
+        const result = await Video.findByIdAndUpdate(req.params.id, {
+            $pull: { likes: req.body.authorId }
+        }, {
+            new: true
+        })
+
+        return res.json(result);
+
+    } catch (error) {
+        return res.json({ error: error });
+    }
+
+}
+
+
+
+
+
+export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser }

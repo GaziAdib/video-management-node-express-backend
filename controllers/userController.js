@@ -1,5 +1,7 @@
 import User from "../models/UserModel.js";
 import bcrypt from 'bcrypt';
+import generateToken from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 
 
 
@@ -41,9 +43,24 @@ const createNewUser = async (req, res) => {
                 }
 
 
-                const userAdded = await User.create(newUser)
+                const user = await User.create(newUser)
 
-                res.status(201).json({ message: `New User ${userAdded.username} created!`, user: userAdded })
+                // create token
+
+                const token = jwt.sign({ user: user }, process.env.JWT_SECRET,
+                    {
+                        expiresIn: "2h",
+                    }
+                );
+
+                // save user token
+
+                user.token = token
+
+                // return new user
+
+
+                res.status(201).json({ message: `New User ${user.username} created!`, user: user, accessToken: token })
 
 
             } catch (error) {
@@ -81,7 +98,14 @@ const loginUser = async (req, res) => {
         if (match) {
 
             // create jWT
-            res.json({ message: `User with Email: ${email} logged in!`, user: foundUser })
+            //token: generateToken(user._id),
+
+            const accessToken = jwt.sign(foundUser, process.env.JWT_SECRET, {
+                expiresIn: '30d'
+            });
+
+            console.log(accessToken)
+            res.json({ message: `User with Email: ${email} logged in!`, user: foundUser, accessToken: accessToken })
 
         } else {
             res.status(401).json({ message: 'User is not authorized' })

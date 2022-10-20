@@ -1,6 +1,5 @@
 import express from 'express';
-
-import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle } from '../controllers/videoController.js';
+import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser } from '../controllers/videoController.js';
 const router = express.Router();
 
 
@@ -23,6 +22,14 @@ router.patch('/:videoId', updateLikeCount)
 
 //search by title
 router.get('/search/:title', searchByTitle)
+
+//like
+router.patch('/:videoId/likes', likesVideoByUser)
+
+// unlike
+router.patch('/:videoId/unlikes', unlikeVideoByUser)
+
+
 
 
 
