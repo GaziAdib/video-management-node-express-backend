@@ -22,12 +22,16 @@ const addComment = async (req, res) => {
 
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         const createdComment = await Comment.create({
-            authorId: authorId,
-            authorName: authorName,
-            content: content,
+            authorId,
+            authorName: authorName ? authorName : 'no author',
+            content,
             video_id: req.params.id
+        }).catch((err) => {
+            res.json({ message: err })
         })
         res.status(201).json(createdComment)
+    } else {
+        res.status(404).json({ message: 'cannot add comment' })
     }
 
 }

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/UserModel.js";
 import Video from "../models/VideoModel.js";
 
+
 // get all videos
 
 const getVideos = async (req, res) => {
@@ -29,16 +30,9 @@ const getVideoById = async (req, res) => {
 
 // add video
 
-const createVideo = async (req, res) => {
+const createVideo = async (req, res, next) => {
 
     const { title, authorId, category, description, thumbnailUrl, videoUrl } = req.body
-
-    // get author infos
-    //const authUser = User.find
-
-    //const author = await User.findOne({ username: 'Adib' })
-
-    //console.log(author);
 
     const createdVideo = await Video.create({
         authorId: authorId,
@@ -57,7 +51,7 @@ const createVideo = async (req, res) => {
 
 
 // Update a video info
-const updateVideo = async (req, res) => {
+const updateVideo = async (req, res, next) => {
 
     const { title, category, description, thumbnailUrl, videoUrl } = req.body
 
@@ -79,15 +73,11 @@ const updateVideo = async (req, res) => {
             throw new Error('Video Not Found')
         }
     }
-
-
-
-
 }
 
 
 //delete video by id
-const deleteVideoById = async (req, res) => {
+const deleteVideoById = async (req, res, next) => {
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
         const foundedVideo = await Video.findById(req.params.videoId);
 
@@ -106,7 +96,7 @@ const deleteVideoById = async (req, res) => {
 }
 
 // update like count
-const updateLikeCount = async (req, res) => {
+const updateLikeCount = async (req, res, next) => {
 
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
         const videoId = await Video.findById(req.params.videoId);
@@ -119,18 +109,6 @@ const updateLikeCount = async (req, res) => {
             throw new Error('Not Found any video to like count')
         }
     }
-
-
-
-    // if(foundedVideo) {
-
-    //  await Video.(foundedVideo)
-    //  res.json({ message: 'Video Deleted' })
-
-    // } else {
-    //     res.status(404)
-    //     throw new Error('Video Not Found')
-    // }
 
 }
 
@@ -154,24 +132,19 @@ const searchByTitle = async (req, res) => {
 
 
 // like
-const likesVideoByUser = async (req, res) => {
+const likesVideoByUser = async (req, res, next) => {
 
-
-    // const result = await Video.findById(req.params.videoId);
-    // return res.json(result);
-    console.log(req.body.authorId);
     const { videoId } = req.params;
+
     try {
         const result = await Video.findOneAndUpdate({ _id: videoId }, {
 
-            $push: { likes: req.user._id },
+            $push: { likes: req?.user?._id },
 
-            //$addToSet: { liskes: req.body.authorId }
         }, {
             new: true
         })
 
-        console.log(result);
         return res.json(result);
 
     } catch (error) {
@@ -179,13 +152,11 @@ const likesVideoByUser = async (req, res) => {
         return res.json({ error: error });
     }
 
-
-
 }
 
 
 // unlike
-const unlikeVideoByUser = async (req, res) => {
+const unlikeVideoByUser = async (req, res, next) => {
     try {
         const result = await Video.findByIdAndUpdate(req.params.id, {
             $pull: { likes: req.body.authorId }

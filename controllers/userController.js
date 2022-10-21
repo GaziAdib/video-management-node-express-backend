@@ -1,6 +1,5 @@
 import User from "../models/UserModel.js";
 import bcrypt from 'bcrypt';
-import generateToken from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 
 
@@ -76,12 +75,12 @@ const createNewUser = async (req, res) => {
 }
 
 
-// login user
 
+// login user
 const loginUser = async (req, res) => {
 
 
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
     //const hashpwd = await bcrypt.hash(password, 10);
 
@@ -100,11 +99,10 @@ const loginUser = async (req, res) => {
             // create jWT
             //token: generateToken(user._id),
 
-            const accessToken = jwt.sign(foundUser, process.env.JWT_SECRET, {
+            const accessToken = jwt.sign({ foundUser }, process.env.JWT_SECRET, {
                 expiresIn: '30d'
             });
 
-            console.log(accessToken)
             res.json({ message: `User with Email: ${email} logged in!`, user: foundUser, accessToken: accessToken })
 
         } else {

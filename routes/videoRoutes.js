@@ -1,4 +1,5 @@
 import express from 'express';
+import loginCheck from '../middlewares/loginCheck.js';
 import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser } from '../controllers/videoController.js';
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.patch('/:videoId', updateLikeCount)
 router.get('/search/:title', searchByTitle)
 
 //like
-router.patch('/:videoId/likes', likesVideoByUser)
+router.patch('/:videoId/likes', loginCheck, likesVideoByUser)
 
 // unlike
 router.patch('/:videoId/unlikes', unlikeVideoByUser)
