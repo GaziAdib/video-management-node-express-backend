@@ -28,7 +28,7 @@ router.get('/search/:title', searchByTitle)
 router.patch('/:videoId/likes', loginCheck, likesVideoByUser)
 
 // unlike
-router.patch('/:videoId/unlikes', unlikeVideoByUser)
+router.patch('/:videoId/unlikes', loginCheck, unlikeVideoByUser)
 
 
 

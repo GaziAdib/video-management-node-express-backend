@@ -4,7 +4,6 @@ import User from "../models/UserModel.js";
 const loginCheck = async (req, res, next) => {
 
     const bearer = await req.headers["authorization"];
-    console.log(bearer);
     const token = bearer.split(" ")[1];
 
     try {

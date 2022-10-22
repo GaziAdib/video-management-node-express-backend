@@ -136,30 +136,41 @@ const likesVideoByUser = async (req, res, next) => {
 
     const { videoId } = req.params;
 
-    try {
-        const result = await Video.findOneAndUpdate({ _id: videoId }, {
+    const video = await Video.findById(videoId);
 
-            $push: { likes: req?.user?._id },
+    const videoLikes = video.likes;
 
-        }, {
-            new: true
-        })
+    if (videoLikes.includes(req.user?._id)) {
+        res.json({ message: 'You already liked this video!' })
+    } else {
+        try {
+            const result = await Video.findOneAndUpdate({ _id: videoId }, {
 
-        return res.json(result);
+                $push: { likes: req?.user?._id },
 
-    } catch (error) {
-        console.log(error)
-        return res.json({ error: error });
+            })
+
+            return res.json(result);
+
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: error });
+        }
     }
+
+
+
 
 }
 
 
 // unlike
 const unlikeVideoByUser = async (req, res, next) => {
+    const { videoId } = req.params;
+
     try {
-        const result = await Video.findByIdAndUpdate(req.params.id, {
-            $pull: { likes: req.body.authorId }
+        const result = await Video.findOneAndUpdate({ _id: videoId }, {
+            $pull: { likes: req?.user?._id },
         }, {
             new: true
         })
