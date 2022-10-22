@@ -18,20 +18,23 @@ const getComments = async (req, res) => {
 
 const addComment = async (req, res) => {
 
-    const { content, authorId, authorName } = req.body
+    const { content, authorId } = req.body
 
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        const createdComment = await Comment.create({
-            authorId,
-            authorName: authorName ? authorName : 'no author',
-            content,
-            video_id: req.params.id
-        }).catch((err) => {
-            res.json({ message: err })
-        })
-        res.status(201).json(createdComment)
+        if (req?.user?._id) {
+            const createdComment = await Comment.create({
+                authorId,
+                authorName: req?.user?.username,
+                content,
+                video_id: req.params.id
+            })
+            res.status(201).json(createdComment)
+        } else {
+            res.status(403).json({ message: 'You have to sign in to comment' })
+        }
+
     } else {
-        res.status(404).json({ message: 'cannot add comment' })
+        res.status(404).json({ message: 'id is not valid' })
     }
 
 }

@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 
 const wishlistSchema = new mongoose.Schema({
-    authorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+    video_id: {
+        type: String,
+        required: true
+    },
+    videoOwnerId: {
+        type: String,
+        required: true
     },
     authorName: {
         type: String,

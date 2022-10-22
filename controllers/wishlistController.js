@@ -18,21 +18,29 @@ const getWishlists = async (req, res) => {
 
 const createWishlist = async (req, res) => {
 
-    const { title, authorId, authorName, category, thumbnailUrl } = req.body
+    const { video_id, authorName, videoOwnerId, title, category, thumbnailUrl } = req.body
 
-    const createdWishlist = await Wishlist.create({
-        authorId: authorId,
-        authorName: authorName,
-        title: title,
-        category: category,
-        thumbnailUrl: thumbnailUrl
-    })
+    try {
 
-    res.status(201).json(createdWishlist)
+        if (!video_id || !authorName || !videoOwnerId) {
+            res.json({ message: 'Video Id, AuthorName, Video Owner Info Required' })
+        } else {
+            const createdWishlist = await Wishlist.create({
+                video_id: video_id,
+                videoOwnerId: videoOwnerId,
+                authorName: authorName,
+                title: title,
+                category: category,
+                thumbnailUrl: thumbnailUrl
+            })
+            res.status(201).json(createdWishlist)
+        }
+
+    } catch (error) {
+        res.json({ message: 'Something is wrong while add to wishlist' });
+    }
 
 }
-
-
 
 
 //delete Wishlist by id

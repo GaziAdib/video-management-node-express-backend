@@ -11,13 +11,13 @@ router.get('/', getVideos)
 router.get('/:videoId', getVideoById)
 
 //create video
-router.post('/createVideo', createVideo)
+router.post('/createVideo', loginCheck, createVideo)
 
 //update video
-router.put('/:videoId', updateVideo)
+router.put('/:videoId', loginCheck, updateVideo)
 
 // delete video
-router.delete('/:videoId', deleteVideoById)
+router.delete('/:videoId', loginCheck, deleteVideoById)
 
 router.patch('/:videoId', updateLikeCount)
 
