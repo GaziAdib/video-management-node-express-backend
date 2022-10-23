@@ -14,6 +14,17 @@ const getWishlists = async (req, res) => {
 
 }
 
+const getAllWishlists = async (req, res) => {
+    try {
+        const wishlists = await Wishlist.find({});
+        res.json(wishlists)
+    } catch (error) {
+        res.json({ message: error })
+        console.log('error fetching wishlists', error)
+    }
+
+}
+
 // add Wish list
 
 const createWishlist = async (req, res) => {
@@ -22,19 +33,15 @@ const createWishlist = async (req, res) => {
 
     try {
 
-        if (!video_id || !authorName || !videoOwnerId) {
-            res.json({ message: 'Video Id, AuthorName, Video Owner Info Required' })
-        } else {
-            const createdWishlist = await Wishlist.create({
-                video_id: video_id,
-                videoOwnerId: videoOwnerId,
-                authorName: authorName,
-                title: title,
-                category: category,
-                thumbnailUrl: thumbnailUrl
-            })
-            res.status(201).json(createdWishlist)
-        }
+        const createdWishlist = await Wishlist.create({
+            video_id: video_id,
+            videoOwnerId: videoOwnerId,
+            authorName: authorName,
+            title: title,
+            category: category,
+            thumbnailUrl: thumbnailUrl
+        })
+        res.status(201).json(createdWishlist)
 
     } catch (error) {
         res.json({ message: 'Something is wrong while add to wishlist' });
@@ -66,4 +73,4 @@ const deleteWishlistById = async (req, res) => {
 
 
 
-export { getWishlists, createWishlist, deleteWishlistById }
+export { getWishlists, createWishlist, getAllWishlists, deleteWishlistById }

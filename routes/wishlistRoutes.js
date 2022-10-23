@@ -1,7 +1,11 @@
 import express from 'express';
-import { createWishlist, deleteWishlistById, getWishlists } from '../controllers/wishlistController.js';
+import { createWishlist, deleteWishlistById, getAllWishlists, getWishlists } from '../controllers/wishlistController.js';
 const router = express.Router();
 
+
+
+// wish all data
+router.get('/allWishlists', getAllWishlists)
 
 
 // wish get all data
