@@ -53,17 +53,25 @@ const createWishlist = async (req, res) => {
 //delete Wishlist by id
 const deleteWishlistById = async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        const foundedWishlist = await Wishlist.findById(req.params.id);
 
-        if (foundedWishlist) {
+        try {
+            const foundedWishlist = await Wishlist.findById(req.params.id);
+            if (foundedWishlist) {
 
-            await Wishlist.deleteOne(foundedWishlist)
-            res.json({ message: 'Wishlist Deleted' })
+                await Wishlist.deleteOne(foundedWishlist)
+                res.json({ message: 'Wishlist Deleted' })
 
-        } else {
-            res.status(404)
-            throw new Error('Wishlist Not Found')
+            } else {
+                res.status(404)
+                throw new Error('Wishlist Not Found')
+            }
+        } catch (error) {
+            res.json({ message: 'Wishlist cannot be deleted' })
         }
+
+
+
+
     }
 }
 
