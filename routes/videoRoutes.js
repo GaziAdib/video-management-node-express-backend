@@ -1,23 +1,24 @@
 import express from 'express';
 import loginCheck from '../middlewares/loginCheck.js';
-import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser } from '../controllers/videoController.js';
+import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory } from '../controllers/videoController.js';
 const router = express.Router();
 
 
 // video get all data
 router.get('/', getVideos)
 
+
 // video single get one video by id
 router.get('/:videoId', getVideoById)
 
 //create video
-router.post('/createVideo', loginCheck, createVideo)
+router.post('/createVideo', createVideo)
 
 //update video
-router.put('/:videoId', loginCheck, updateVideo)
+router.put('/:videoId/update', updateVideo)
 
 // delete video
-router.delete('/:videoId', loginCheck, deleteVideoById)
+router.delete('/:videoId', deleteVideoById)
 
 router.patch('/:videoId', updateLikeCount)
 

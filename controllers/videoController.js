@@ -34,18 +34,23 @@ const createVideo = async (req, res, next) => {
 
     const { title, authorId, category, description, thumbnailUrl, videoUrl } = req.body
 
-    const createdVideo = await Video.create({
-        authorId: authorId,
-        title: title,
-        category: category,
-        description: description,
-        thumbnailUrl: thumbnailUrl,
-        videoUrl: videoUrl,
-        likeCount: 0,
-        unlikeCount: 0
-    })
+    try {
+        const createdVideo = await Video.create({
+            authorId: authorId,
+            title: title,
+            category: category,
+            description: description,
+            thumbnailUrl: thumbnailUrl,
+            videoUrl: videoUrl,
+            likeCount: 0,
+            unlikeCount: 0
+        })
 
-    res.status(201).json(createdVideo)
+        res.status(201).json(createdVideo)
+    } catch (error) {
+        res.status(404).json({ message: error })
+    }
+
 
 }
 
@@ -56,22 +61,16 @@ const updateVideo = async (req, res, next) => {
     const { title, category, description, thumbnailUrl, videoUrl } = req.body
 
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
-        const video = await Video.findById(req.params.videoId);
-        if (video) {
-            video.title = title
-            video.category = category
-            video.description = description
-            video.thumbnailUrl = thumbnailUrl
-            video.videoUrl = videoUrl
 
-            const updateVideo = await video.save()
+        try {
+            const videoUpdated = await Video.findByIdAndUpdate(req.params.videoId, {
+                $set: { title: title, category: category, description: description, thumbnailUrl: thumbnailUrl, videoUrl: videoUrl }
+            });
+            res.status(201).json(videoUpdated)
+        } catch (error) {
+            res.json({ message: error })
+        }
 
-            res.json(updateVideo);
-        }
-        else {
-            res.status(404)
-            throw new Error('Video Not Found')
-        }
     }
 }
 
@@ -79,17 +78,25 @@ const updateVideo = async (req, res, next) => {
 //delete video by id
 const deleteVideoById = async (req, res, next) => {
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
-        const foundedVideo = await Video.findById(req.params.videoId);
 
-        if (foundedVideo) {
+        try {
+            const foundedVideo = await Video.findById(req.params.videoId);
 
-            await Video.deleteOne(foundedVideo)
-            res.json({ message: 'Video Deleted' })
+            if (foundedVideo) {
 
-        } else {
-            res.status(404)
-            throw new Error('Video Not Found')
+                await Video.deleteOne(foundedVideo)
+                res.json({ message: 'Video Deleted' })
+
+            } else {
+                res.status(404)
+                throw new Error('Video Not Found')
+            }
+
+        } catch (error) {
+            res.json({ message: error });
         }
+
+
     }
 
 
@@ -184,7 +191,29 @@ const unlikeVideoByUser = async (req, res, next) => {
 }
 
 
+// get related videos
+
+const getRelatedVideosByCategory = async (req, res) => {
+    const queryCategory = new RegExp(req.query.category, 'i');
+    if (queryCategory !== '') {
+        try {
+            const results = await Video.find({ category: queryCategory })
+            res.status(200).json(results)
+        } catch (error) {
+            console.log(error)
+            res.status(404).json({ message: error })
+        }
+
+    } else {
+        res.status(404).json({ message: 'Not Found related videos based on this category' })
+        throw new Error('Not Found based on this category')
+    }
+
+}
 
 
 
-export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser }
+
+
+
+export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory }

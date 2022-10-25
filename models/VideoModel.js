@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const videoSchema = new mongoose.Schema({
     authorId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true,
     },
     title: {
         type: String,
