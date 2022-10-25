@@ -18,13 +18,13 @@ const getComments = async (req, res) => {
 
 const addComment = async (req, res) => {
 
-    const { content, authorId } = req.body
+    const { content, authorName, authorId } = req.body
 
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        if (req?.user?._id) {
+        if (authorName !== '') {
             const createdComment = await Comment.create({
                 authorId,
-                authorName: req?.user?.username,
+                authorName,
                 content,
                 video_id: req.params.id
             })
@@ -45,17 +45,21 @@ const addComment = async (req, res) => {
 //delete Comment by id
 const deleteCommentById = async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        const foundedComment = await Comment.findById(req.params.id);
 
-        if (foundedComment) {
-
-            await Comment.deleteOne(foundedComment)
-            res.json({ message: 'Comment Deleted' })
-
-        } else {
-            res.status(404)
-            throw new Error('Comment Not Found')
+        try {
+            const foundedComment = await Comment.findById(req.params.id);
+            if (foundedComment) {
+                try {
+                    await Comment.deleteOne(foundedComment)
+                    res.json({ message: 'Comment Deleted' })
+                } catch (error) {
+                    res.json({ message: error })
+                }
+            }
+        } catch (error) {
+            res.status(404).json({ message: 'Comment not found' })
         }
+
     }
 }
 

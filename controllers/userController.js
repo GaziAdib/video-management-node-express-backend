@@ -96,9 +96,6 @@ const loginUser = async (req, res) => {
         const match = await bcrypt.compare(password, foundUser.password);
         if (match) {
 
-            // create jWT
-            //token: generateToken(user._id),
-
             const accessToken = jwt.sign({ foundUser }, process.env.JWT_SECRET, {
                 expiresIn: '30d'
             });
