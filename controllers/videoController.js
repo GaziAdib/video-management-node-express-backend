@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "../models/UserModel.js";
 import Video from "../models/VideoModel.js";
 
 
@@ -32,12 +31,13 @@ const getVideoById = async (req, res) => {
 
 const createVideo = async (req, res, next) => {
 
-    const { title, authorId, category, description, thumbnailUrl, videoUrl } = req.body
+    const { title, videoSourceType, authorId, category, description, thumbnailUrl, videoUrl } = req.body
 
     try {
         const createdVideo = await Video.create({
             authorId: authorId,
             title: title,
+            videoSourceType: videoSourceType,
             category: category,
             description: description,
             thumbnailUrl: thumbnailUrl,
@@ -58,13 +58,13 @@ const createVideo = async (req, res, next) => {
 // Update a video info
 const updateVideo = async (req, res, next) => {
 
-    const { title, category, description, thumbnailUrl, videoUrl } = req.body
+    const { title, videoSourceType, category, description, thumbnailUrl, videoUrl } = req.body
 
     if (mongoose.Types.ObjectId.isValid(req.params.videoId)) {
 
         try {
             const videoUpdated = await Video.findByIdAndUpdate(req.params.videoId, {
-                $set: { title: title, category: category, description: description, thumbnailUrl: thumbnailUrl, videoUrl: videoUrl }
+                $set: { title: title, videoSourceType: videoSourceType, category: category, description: description, thumbnailUrl: thumbnailUrl, videoUrl: videoUrl }
             });
             res.status(201).json(videoUpdated)
         } catch (error) {

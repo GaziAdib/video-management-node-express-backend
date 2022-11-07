@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Comment from "../models/CommentModel.js";
+import Video from "../models/VideoModel.js";
 
 // get all Comments
 
@@ -48,6 +49,7 @@ const deleteCommentById = async (req, res) => {
 
         try {
             const foundedComment = await Comment.findById(req.params.id);
+
             if (foundedComment) {
                 try {
                     await Comment.deleteOne(foundedComment)

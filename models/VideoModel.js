@@ -10,6 +10,10 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    videoSourceType: {
+        type: String,
+        required: true
+    },
     category: {
         type: String,
         required: true,
@@ -20,7 +24,7 @@ const videoSchema = new mongoose.Schema({
     },
     thumbnailUrl: {
         type: String,
-        required: true,
+        required: false,
     },
     videoUrl: {
         type: String,
