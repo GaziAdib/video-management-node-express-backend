@@ -29,7 +29,7 @@ const getVideoById = async (req, res) => {
 
 // add video
 
-const createVideo = async (req, res, next) => {
+const createVideo = async (req, res) => {
 
     const { title, videoSourceType, authorId, category, description, thumbnailUrl, videoUrl } = req.body
 
@@ -56,7 +56,7 @@ const createVideo = async (req, res, next) => {
 
 
 // Update a video info
-const updateVideo = async (req, res, next) => {
+const updateVideo = async (req, res) => {
 
     const { title, videoSourceType, category, description, thumbnailUrl, videoUrl } = req.body
 

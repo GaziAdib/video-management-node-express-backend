@@ -1,6 +1,16 @@
 import User from "../models/UserModel.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import nodemailer from 'nodemailer';
+
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+    }
+})
 
 
 
@@ -79,7 +89,6 @@ const createNewUser = async (req, res) => {
 // login user
 const loginUser = async (req, res) => {
 
-
     const { email, password } = req.body;
 
     //const hashpwd = await bcrypt.hash(password, 10);
@@ -109,10 +118,210 @@ const loginUser = async (req, res) => {
         res.json({ message: error.message })
     }
 
-
-
 }
 
+
+// forget password function & generate unique token for old user
+// const forgetPassword = async (req, res) => {
+//     const { email } = req.body;
+
+//     try {
+
+//         const oldUser = await User.findOne({ email: email });
+
+//         if (!oldUser) {
+//             return res.json({ status: "User Does not Exists" });
+//         }
+
+//         const secret = process.env.JWT_SECRET + oldUser.password;
+
+
+//         const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
+//             expiresIn: "5m",
+//         });
+
+//         const link = `http://localhost:5000/api/users/reset-password/${oldUser._id}/${token}`;
+
+
+//         // node mailer
+
+//         var transporter = nodemailer.createTransport({
+//             host: "smtp.mailtrap.io",
+//             port: 2525,
+//             auth: {
+//                 user: "c35a5169c3141f",
+//                 pass: "4b7b64130b15ac"
+//             }
+//         });
+
+//         var mailOptions = {
+//             from: 'greatadib82@gmail.com',
+//             to: `${oldUser.email}`,
+//             subject: 'Sending Email using Node.js From Video App',
+//             text: `${link}`
+//         };
+
+//         transporter.sendMail(mailOptions, function (error, info) {
+//             if (error) {
+//                 console.log(error);
+//             } else {
+//                 console.log('Email sent: ' + info.response);
+//             }
+//         });
+
+//         console.log(link);
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+// const resetPassword = async (req, res) => {
+
+//     const { id, token } = req.params;
+//     const { password } = req.body;
+//     console.log(req.params);
+
+//     const oldUser = await User.findOne({ _id: id });
+
+//     if (!oldUser) {
+//         return res.json({ status: "User Does not Exists" });
+//     }
+
+//     const secret = process.env.JWT_SECRET + oldUser.password;
+
+//     try {
+
+//         const verify = jwt.verify(token, secret)
+//         console.log('verify', verify)
+//         const hashedPassword = await bcrypt.hash(password, 12);
+
+//         await User.updateOne(
+//             {
+//                 _id: id
+//             },
+
+//             {
+//                 $set: {
+//                     password: hashedPassword,
+//                 },
+//             }
+//         );
+//         res.json({ status: 'Password Updated!' })
+
+//     } catch (error) {
+//         console.log(error);
+//         res.json({ status: "Something Went Wrong" })
+//     }
+
+
+// }
+
+
+// send email link for reset password
+//router.post("/sendpasswordlink"
+const sendEmailLink = async (req, res) => {
+    console.log(req.body)
+
+    const { email } = req.body;
+
+    if (!email) {
+        res.status(401).json({ status: 401, message: "Enter Your Email" })
+    }
+
+    try {
+        const userfind = await User.findOne({ email: email });
+
+        // token generate for reset password
+        const token = jwt.sign({ _id: userfind._id }, keysecret, {
+            expiresIn: "120s"
+        });
+
+        const setusertoken = await User.findByIdAndUpdate({ _id: userfind._id }, { verifytoken: token }, { new: true });
+
+
+        if (setusertoken) {
+            const mailOptions = {
+                from: process.env.EMAIL,
+                to: email,
+                subject: "Sending Email For password Reset",
+                text: `This Link Valid For 2 MINUTES http://localhost:3001/forgotpassword/${userfind.id}/${setusertoken.verifytoken}`
+            }
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log("error", error);
+                    res.status(401).json({ status: 401, message: "email not send" })
+                } else {
+                    console.log("Email sent", info.response);
+                    res.status(201).json({ status: 201, message: "Email sent Succsfully" })
+                }
+            })
+
+        }
+
+    } catch (error) {
+        res.status(401).json({ status: 401, message: "invalid user" })
+    }
+};
+
+
+// verify user for forgot password time
+// route.get('/forgotpassword/:id/:token')
+const forgotPassword = async (req, res) => {
+    const { id, token } = req.params;
+
+    try {
+
+        const validUser = await User.findOne({ _id: id, verifytoken: token });
+
+        const verifytoken = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log(verifytoken);
+
+        if (validUser && verifytoken._id) {
+            res.status(201).json({ status: 201, validUser })
+        } else {
+            res.status(401).json({ status: 401, message: "user not exist" })
+        }
+
+    } catch (error) {
+        res.status(401).json({ status: 401, error })
+    }
+}
+
+
+// change password
+// route.post('/:id/:token')
+
+const changePassword = async (req, res) => {
+    const { id, token } = req.params;
+
+    const { password } = req.body;
+
+    try {
+
+        const validUser = await User.findOne({ _id: id, verifytoken: token });
+
+        const verifytoken = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (verifytoken._id & validUser) {
+            const newpassword = await bcrypt.hash(password, 12);
+
+            const setNewPass = await User.findByIdAndUpdate({ _id: id }, { password: newpassword });
+
+            setNewPass.save();
+            res.status(201).json({ status: 201, setNewPass })
+
+        } else {
+            res.status(401).json({ status: 401, message: "user not exist" })
+        }
+
+
+    } catch (error) {
+        res.status(401).json({ status: 401, error })
+    }
+}
 
 
 
