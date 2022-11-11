@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewUser, forgetPassword, loginUser, resetPassword } from '../controllers/userController.js';
+import { changePassword, createNewUser, forgotPassword, loginUser, sendEmailLink } from '../controllers/userController.js';
 const router = express.Router();
 
 
@@ -9,14 +9,15 @@ router.post('/register', createNewUser)
 // login user
 router.post('/login', loginUser)
 
-// forget password
 
-router.post('/forget-password', forgetPassword)
+// send password link
+router.post('/sendpasswordlink', sendEmailLink);
+
+router.get('/forgotpassword/:id/:token', forgotPassword);
+
+router.post('/changepassword/:id/:token', changePassword);
 
 
-// reset password
-
-router.get('/reset-password/:id/:token', resetPassword)
 
 
 

@@ -3,14 +3,14 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer';
 
-
-const transporter = nodemailer.createTransport({
-    service: "gmail",
+var transporter = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
     auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD
+        user: "c35a5169c3141f",
+        pass: "4b7b64130b15ac"
     }
-})
+});
 
 
 
@@ -121,102 +121,6 @@ const loginUser = async (req, res) => {
 }
 
 
-// forget password function & generate unique token for old user
-// const forgetPassword = async (req, res) => {
-//     const { email } = req.body;
-
-//     try {
-
-//         const oldUser = await User.findOne({ email: email });
-
-//         if (!oldUser) {
-//             return res.json({ status: "User Does not Exists" });
-//         }
-
-//         const secret = process.env.JWT_SECRET + oldUser.password;
-
-
-//         const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-//             expiresIn: "5m",
-//         });
-
-//         const link = `http://localhost:5000/api/users/reset-password/${oldUser._id}/${token}`;
-
-
-//         // node mailer
-
-//         var transporter = nodemailer.createTransport({
-//             host: "smtp.mailtrap.io",
-//             port: 2525,
-//             auth: {
-//                 user: "c35a5169c3141f",
-//                 pass: "4b7b64130b15ac"
-//             }
-//         });
-
-//         var mailOptions = {
-//             from: 'greatadib82@gmail.com',
-//             to: `${oldUser.email}`,
-//             subject: 'Sending Email using Node.js From Video App',
-//             text: `${link}`
-//         };
-
-//         transporter.sendMail(mailOptions, function (error, info) {
-//             if (error) {
-//                 console.log(error);
-//             } else {
-//                 console.log('Email sent: ' + info.response);
-//             }
-//         });
-
-//         console.log(link);
-
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-// const resetPassword = async (req, res) => {
-
-//     const { id, token } = req.params;
-//     const { password } = req.body;
-//     console.log(req.params);
-
-//     const oldUser = await User.findOne({ _id: id });
-
-//     if (!oldUser) {
-//         return res.json({ status: "User Does not Exists" });
-//     }
-
-//     const secret = process.env.JWT_SECRET + oldUser.password;
-
-//     try {
-
-//         const verify = jwt.verify(token, secret)
-//         console.log('verify', verify)
-//         const hashedPassword = await bcrypt.hash(password, 12);
-
-//         await User.updateOne(
-//             {
-//                 _id: id
-//             },
-
-//             {
-//                 $set: {
-//                     password: hashedPassword,
-//                 },
-//             }
-//         );
-//         res.json({ status: 'Password Updated!' })
-
-//     } catch (error) {
-//         console.log(error);
-//         res.json({ status: "Something Went Wrong" })
-//     }
-
-
-// }
-
 
 // send email link for reset password
 //router.post("/sendpasswordlink"
@@ -233,19 +137,21 @@ const sendEmailLink = async (req, res) => {
         const userfind = await User.findOne({ email: email });
 
         // token generate for reset password
-        const token = jwt.sign({ _id: userfind._id }, keysecret, {
-            expiresIn: "120s"
+        const token = jwt.sign({ _id: userfind._id }, process.env.JWT_SECRET, {
+            expiresIn: "3m"
         });
 
         const setusertoken = await User.findByIdAndUpdate({ _id: userfind._id }, { verifytoken: token }, { new: true });
 
+        console.log('userToken', setusertoken);
+
 
         if (setusertoken) {
             const mailOptions = {
-                from: process.env.EMAIL,
+                from: "greatadib82@gmail.com",
                 to: email,
                 subject: "Sending Email For password Reset",
-                text: `This Link Valid For 2 MINUTES http://localhost:3001/forgotpassword/${userfind.id}/${setusertoken.verifytoken}`
+                text: `This Link Valid For 2 MINUTES http://localhost:3000/forgotpassword/${userfind._id}/${setusertoken.verifytoken}`
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -303,14 +209,16 @@ const changePassword = async (req, res) => {
 
         const validUser = await User.findOne({ _id: id, verifytoken: token });
 
-        const verifytoken = jwt.verify(token, process.env.JWT_SECRET);
+        // const verifytoken = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (verifytoken._id & validUser) {
+        if (validUser) {
+
             const newpassword = await bcrypt.hash(password, 12);
 
             const setNewPass = await User.findByIdAndUpdate({ _id: id }, { password: newpassword });
 
             setNewPass.save();
+
             res.status(201).json({ status: 201, setNewPass })
 
         } else {
@@ -332,4 +240,4 @@ const changePassword = async (req, res) => {
 
 
 
-export { createNewUser, loginUser };
+export { createNewUser, loginUser, sendEmailLink, forgotPassword, changePassword };
