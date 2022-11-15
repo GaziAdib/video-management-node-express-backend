@@ -31,7 +31,8 @@ const blogSchema = new mongoose.Schema({
 
     blogIsPublished: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true
     }
 
 }, {

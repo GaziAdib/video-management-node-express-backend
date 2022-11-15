@@ -12,6 +12,8 @@ import videoRoutes from './routes/videoRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import commentRoutes from './routes/commentRoutes.js'
 import userRoutes from './routes/userRoutes.js';
+import blogRoutes from './routes/blogRoutes.js';
+import blogCommentRoutes from './routes/blogCommentRoutes.js';
 
 
 dotenv.config()
@@ -31,8 +33,10 @@ app.get('/hellow', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/blogs', blogRoutes);
 app.use('/api/videos/wishlists', wishlistRoutes);
 app.use('/api/videos', commentRoutes);
+app.use('/api/blog', blogCommentRoutes);
 
 const PORT = process.env.PORT || 5000;
 

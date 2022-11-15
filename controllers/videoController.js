@@ -21,6 +21,8 @@ const getVideoById = async (req, res) => {
             res.status(404).json({ message: 'video with this id not found!' })
             throw new Error('Video Not Found')
         }
+    } else {
+        res.json({ message: 'Video Id Not Valid' })
     }
 
 
