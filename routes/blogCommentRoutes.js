@@ -4,13 +4,13 @@ import { addBlogComment, deleteBlogCommentById, getBlogComments } from '../contr
 const router = express.Router();
 
 //  get all blog comments for a blog id 
-router.get('/:id/getComments', getBlogComments)
+router.get('/:blogId/getComments', getBlogComments)
 
 //add new blog comment
-router.post('/:id/addBlogComment', addBlogComment)
+router.post('/:blogId/addBlogComment', addBlogComment)
 
 //delete comment
-router.delete('/:id/blogComment/delete', deleteBlogCommentById)
+router.delete('/:blogId/blogComment/delete', deleteBlogCommentById)
 
 
 export default router;

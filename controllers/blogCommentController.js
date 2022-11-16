@@ -20,17 +20,18 @@ const getBlogComments = async (req, res) => {
 
 const addBlogComment = async (req, res) => {
 
-    const { blogAuthorName, blogCommentContent, blog_author_id } = req.body
-
     const { blogId } = req.params.blogId;
 
-    if (mongoose.Types.ObjectId.isValid(blogId)) {
+    const { blogAuthorName, blogCommentContent, blog_author_id, blog_id } = req.body
+
+
+    if (blog_id !== '') {
         if (blogAuthorName !== '') {
             const createdComment = await BlogComment.create({
                 blog_author_id,
                 blogAuthorName,
                 blogCommentContent,
-                blog_id: blogId
+                blog_id
             })
             res.status(201).json(createdComment)
         } else {
@@ -49,12 +50,10 @@ const addBlogComment = async (req, res) => {
 //delete Comment by id
 const deleteBlogCommentById = async (req, res) => {
 
-    const { blogId } = req.params.blogId;
-
-    if (mongoose.Types.ObjectId.isValid(blogId)) {
+    if (mongoose.Types.ObjectId.isValid(req.params.blogId)) {
 
         try {
-            const foundedComment = await BlogComment.findById(blogId);
+            const foundedComment = await BlogComment.findById(req.params?.blogId);
 
             if (foundedComment) {
                 try {
