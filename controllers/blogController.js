@@ -118,10 +118,18 @@ const UpdateBlogById = async (req, res) => {
 
 // search 
 const searchBlogByTitle = async (req, res) => {
-    const queryTitle = new RegExp(req.params?.title, 'i');
-    if (queryTitle !== '') {
+
+    //Product.find({title: { $regex: title, $options: "i" }})
+    // const queryTitle = new RegExp(req.params?.title, 'i');
+
+    // const queryTitle = req.params?.title;
+    // console.log(queryTitle);
+    // console.log(req.params?.title);
+
+
+    if (req?.params?.title) {
         try {
-            const search_results = await Blog.find({ title: queryTitle })
+            const search_results = await Blog.find({ blogTitle: { $regex: req?.params?.title, $options: "i" } })
             res.status(200).json(search_results)
         } catch (error) {
             console.log(error)
