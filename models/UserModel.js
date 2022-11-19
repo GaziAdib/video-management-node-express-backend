@@ -11,6 +11,10 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
+    bio: {
+        type: String,
+        required: false,
+    },
     profileImage: {
         type: String,
         required: false,

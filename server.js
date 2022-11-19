@@ -14,6 +14,7 @@ import commentRoutes from './routes/commentRoutes.js'
 import userRoutes from './routes/userRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import blogCommentRoutes from './routes/blogCommentRoutes.js';
+import userProfileRoutes from './routes/userProfileRoutes.js';
 
 
 dotenv.config()
@@ -32,6 +33,7 @@ app.get('/hellow', (req, res) => {
 
 
 app.use('/api/users', userRoutes);
+app.use('/api/user/profile', userProfileRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/videos/wishlists', wishlistRoutes);
