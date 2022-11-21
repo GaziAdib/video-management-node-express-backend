@@ -9,7 +9,7 @@ router.get('/allWishlists', getAllWishlists)
 
 
 // wish get all data
-router.get('/:id/all', getWishlists)
+router.get('/:userId/all', getWishlists)
 
 
 // delete wish

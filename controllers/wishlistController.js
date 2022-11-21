@@ -5,7 +5,7 @@ import Wishlist from "../models/WishlistModel.js";
 
 const getWishlists = async (req, res) => {
     try {
-        const wishlists = await Wishlist.find({ authorId: req.params.id });
+        const wishlists = await Wishlist.find({ authorId: req.params?.userId });
         res.json(wishlists)
     } catch (error) {
         res.json({ message: error })

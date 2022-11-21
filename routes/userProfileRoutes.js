@@ -4,7 +4,7 @@ const router = express.Router();
 
 // get all blogs
 router.get('/:userId', getUserProfileById);
-router.get('/:userId/update', updateUserProfileById);
+router.put('/:userId/update', updateUserProfileById);
 
 
 export default router;
