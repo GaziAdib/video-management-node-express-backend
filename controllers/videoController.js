@@ -5,9 +5,41 @@ import Video from "../models/VideoModel.js";
 // get all videos
 
 const getVideos = async (req, res) => {
-    const videos = await Video.find({});
-    res.json(videos)
+
+    try {
+
+        const videos = await Video.find({});
+        res.json(videos)
+
+    } catch (error) {
+        res.status(404).json({ message: error?.message });
+    }
+
 }
+
+// get paginated videos
+
+const getPaginatedVideos = async (req, res) => {
+
+    const { page } = req.query;
+
+    try {
+
+        const LIMIT = 3;
+        const startIndex = (Number(page) - 1) * LIMIT;
+        const total = await Video.countDocuments({});
+        const videos = await Video.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+
+        res.status(200).json({ data: videos, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT) });
+
+
+    } catch (error) {
+        res.status(404).json({ message: error?.message });
+    }
+
+}
+
+
 
 // get video by id
 const getVideoById = async (req, res) => {
@@ -218,4 +250,4 @@ const getRelatedVideosByCategory = async (req, res) => {
 
 
 
-export { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory }
+export { getVideos, getPaginatedVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory }

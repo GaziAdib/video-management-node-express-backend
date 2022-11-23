@@ -1,12 +1,14 @@
 import express from 'express';
 import loginCheck from '../middlewares/loginCheck.js';
-import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory } from '../controllers/videoController.js';
+import { getVideos, getVideoById, createVideo, updateVideo, deleteVideoById, updateLikeCount, searchByTitle, likesVideoByUser, unlikeVideoByUser, getRelatedVideosByCategory, getPaginatedVideos } from '../controllers/videoController.js';
 const router = express.Router();
 
 
 // video get all data
 router.get('/', getVideos)
 
+// paginated videos
+router.get('/paginatedvideos', getPaginatedVideos);
 
 // video single get one video by id
 router.get('/:videoId', getVideoById)
