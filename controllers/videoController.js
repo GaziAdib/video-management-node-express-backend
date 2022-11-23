@@ -25,7 +25,7 @@ const getPaginatedVideos = async (req, res) => {
 
     try {
 
-        const LIMIT = 3;
+        const LIMIT = 6;
         const startIndex = (Number(page) - 1) * LIMIT;
         const total = await Video.countDocuments({});
         const videos = await Video.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
