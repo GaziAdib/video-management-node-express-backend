@@ -1,9 +1,13 @@
 import express from 'express';
-import { createBlog, deleteBlogById, getBlogById, getBlogs, searchBlogByTitle, UpdateBlogById } from "../controllers/blogController.js"
+import { createBlog, deleteBlogById, getBlogById, getBlogs, getPaginatedBlogs, searchBlogByTitle, UpdateBlogById } from "../controllers/blogController.js"
 const router = express.Router();
 
 // get all blogs
 router.get('/', getBlogs)
+
+// get paginated blogs
+
+router.get('/paginatedBlogs', getPaginatedBlogs);
 
 // get single blog by id
 router.get('/:blogId', getBlogById)

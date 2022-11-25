@@ -14,6 +14,33 @@ const getBlogs = async (req, res) => {
     }
 }
 
+// get paginated blogs
+
+const getPaginatedBlogs = async (req, res) => {
+
+    const { page } = req.query;
+
+    try {
+
+
+        const LIMIT = 3;
+
+        const startIndex = (Number(page) - 1) * LIMIT;
+
+        const total = await Blog.countDocuments({});
+
+        const blogs = await Blog.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+
+        res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT) })
+
+
+    } catch (error) {
+        res.status(401).json({ message: error?.message });
+    }
+}
+
+
+
 
 // getBlogById
 
@@ -145,7 +172,7 @@ const searchBlogByTitle = async (req, res) => {
 
 
 
-export { getBlogs, getBlogById, createBlog, deleteBlogById, UpdateBlogById, searchBlogByTitle };
+export { getBlogs, getPaginatedBlogs, getBlogById, createBlog, deleteBlogById, UpdateBlogById, searchBlogByTitle };
 
 
 
